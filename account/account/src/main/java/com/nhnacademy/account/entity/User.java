@@ -1,6 +1,7 @@
 package com.nhnacademy.account.entity;
 
 import com.nhnacademy.account.vo.UserRequestVo;
+import com.nhnacademy.account.vo.UserStatusVo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ public class User {
     @GeneratedValue(strategy =GenerationType.IDENTITY)
     private Integer userNo;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id",unique = true)
     private String userId;
 
     @Column(name = "user_pwd")
@@ -33,6 +34,16 @@ public class User {
 
     @Column(name = "user_status")
     private String status;
+
+    @Builder
+    public User(Integer userNo, String userId, String userPwd, String userName, String email, String status) {
+        this.userNo = userNo;
+        this.userId = userId;
+        this.userPwd = userPwd;
+        this.userName = userName;
+        this.email = email;
+        this.status = status;
+    }
 
     public User(UserRequestVo userRequestVo) {
         this.userId = userRequestVo.getId();

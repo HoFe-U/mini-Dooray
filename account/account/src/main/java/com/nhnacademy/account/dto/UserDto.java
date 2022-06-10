@@ -8,9 +8,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class UserDto {
     private String userName;
-
     private String userEmail;
-
     private String userStatus;
     public UserDto(User user) {
         this.userName = user.getUserName();

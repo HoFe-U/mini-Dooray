@@ -8,6 +8,7 @@ import com.nhnacademy.account.repository.UserRepository;
 import com.nhnacademy.account.service.UserService;
 import com.nhnacademy.account.vo.UserRequestVo;
 import com.nhnacademy.account.vo.UserResponseVo;
+import com.nhnacademy.account.vo.UserStatusVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -27,28 +28,41 @@ public class UserServiceImpl implements UserService {
         if(users.isEmpty()){
             throw new NoUserException();
         }
+
         return users.stream()
-                .map(user -> new UserDto(user))
-                .sorted()
+                .map(UserDto::new)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public UserDto getUser(Integer userNo) {
-        User user = repository.findById(userNo).orElseThrow(NoUserException::new);
+    public UserDto getUser(String userId) {
+        User user = repository.findByUserId(userId).orElseThrow(NoUserException::new);
         return new UserDto(user);
     }
 
     @Override
     @Transactional
     @Modifying
-    public UserResponseVo replaceUser(Integer userNo, UserRequestVo userRequestVo) {
-        User user = repository.findById(userNo).orElseThrow(NoUserException::new);
+    public UserResponseVo replaceUser(String userId, UserRequestVo userRequestVo) {
+        User user = repository.findByUserId(userId).orElseThrow(NoUserException::new);
+
         user.setUserId(userRequestVo.getId());
         user.setUserName(userRequestVo.getName());
         user.setUserPwd(userRequestVo.getPwd());
         user.setEmail(userRequestVo.getEmail());
         user.setStatus(userRequestVo.getStatus());
+
+        repository.flush();
+
+        return new UserResponseVo(user);
+    }
+
+    @Override
+    public UserResponseVo replaceUser(UserStatusVo userStatusVo) {
+        User user = repository.findByUserId(userStatusVo.getUserId()).orElseThrow(NoUserException::new);
+
+        user.setStatus(userStatusVo.getStatus());
+
         repository.flush();
 
         return new UserResponseVo(user);
@@ -70,9 +84,13 @@ public class UserServiceImpl implements UserService {
         repository.save(user);
         return new UserResponseVo(user);
     }
-
     @Override
-    public void removeUser(Integer userNo) {
-        repository.deleteById(userNo);
+    public UserResponseVo findEmail(String userEmail) {
+        User user = repository.findByEmail(userEmail).orElseThrow(NoUserException::new);
+        return new UserResponseVo(user);
+    }
+    @Override
+    public void removeUser(String userId) {
+        repository.deleteByUserId(userId);
     }
 }
