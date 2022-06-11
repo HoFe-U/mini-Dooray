@@ -64,8 +64,8 @@ class UserServiceTest {
         UserDto userDto = users.get(0);
         UserDto userDto1 = users.get(1);
 
-        assertThat(userDto.getUserName()).isEqualTo(user1.getUserName());
-        assertThat(userDto1.getUserName()).isEqualTo(user2.getUserName());
+        assertThat(userDto.getUserId()).isEqualTo(user1.getUserId());
+        assertThat(userDto1.getUserId()).isEqualTo(user2.getUserId());
     }
 
     @Test
@@ -74,7 +74,7 @@ class UserServiceTest {
 
         UserDto user = userService.getUser("a");
 
-        assertThat(user1.getUserName()).isEqualTo(user.getUserName());
+        assertThat(user1.getUserId()).isEqualTo(user.getUserId());
     }
 
     @Test
@@ -99,7 +99,7 @@ class UserServiceTest {
 
         UserDto userDto = userService.checkUserIdAndPwd(user1.getUserId(), user1.getUserPwd());
 
-        assertThat(user1.getUserName()).isEqualTo(userDto.getUserName());
+        assertThat(user1.getUserId()).isEqualTo(userDto.getUserId());
     }
     @Test
     void createUserException(){

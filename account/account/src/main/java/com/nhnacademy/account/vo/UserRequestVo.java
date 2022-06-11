@@ -3,7 +3,6 @@ package com.nhnacademy.account.vo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -16,7 +15,6 @@ public class UserRequestVo {
         this.email = email;
         this.status = status;
     }
-
     private String id;
 
     private String pwd;

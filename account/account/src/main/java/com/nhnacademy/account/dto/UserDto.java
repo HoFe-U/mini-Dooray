@@ -7,11 +7,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public class UserDto {
-    private String userName;
+    private String userId;
+    private String userPwd;
     private String userEmail;
     private String userStatus;
+
+
     public UserDto(User user) {
-        this.userName = user.getUserName();
+        this.userId = user.getUserId();
+
+        this.userPwd = user.getUserPwd();
 
         this.userEmail = user.getEmail();
 

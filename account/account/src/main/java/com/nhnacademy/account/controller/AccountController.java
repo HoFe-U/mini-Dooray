@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
     //port : 8090
     private final UserService userService;
-
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/checkUser/{id}")
+    public UserDto getUserById(@PathVariable("id")String id){
+        return userService.getUser(id);
+    }
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/checkUser")
     public UserDto getUser(@RequestParam("id") String id,

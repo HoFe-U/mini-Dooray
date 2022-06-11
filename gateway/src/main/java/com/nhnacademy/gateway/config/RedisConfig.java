@@ -1,6 +1,8 @@
 package com.nhnacademy.gateway.config;
 
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,13 +14,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
-import org.springframework.session.web.http.CookieSerializer;
-import org.springframework.session.web.http.DefaultCookieSerializer;
 
 @EnableRedisHttpSession
+@RequiredArgsConstructor
 @Configuration
-@PropertySource("classpath:redis.properties")
-public class RedisConfig{
+@PropertySource("classpath:application.properties")
+public class RedisConfig {
     @Value("${redis.host}")
     private String host;
 
@@ -43,8 +44,8 @@ public class RedisConfig{
     }
 
     @Bean
-    public RedisTemplate<?,?> redisTemplate(){
-        RedisTemplate<byte[],byte[]> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String,Object> redisTemplate(){
+        RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
@@ -53,13 +54,5 @@ public class RedisConfig{
 
         return redisTemplate;
     }
-    @Bean
-    public CookieSerializer cookieSerializer() {
-        DefaultCookieSerializer serializer = new DefaultCookieSerializer();
-        serializer.setCookieName("SESSION");
-        serializer.setCookieMaxAge(259200);     // 3일
-        serializer.setCookiePath("/");
 
-        return serializer;
-    }
 }
