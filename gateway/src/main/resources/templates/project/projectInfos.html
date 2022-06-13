@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ProjectInfo</title>
+    <style>
+        table, th, td {
+            border: solid 1px;
+        }
+    </style>
+</head>
+<body>
+<h1>Project Info</h1><br>
+
+<strong>Project Status Change</strong><br>
+
+<h4 th:text="'Current Status  : '+${project.status}"></h4>
+<ul>
+    <li>
+        <a th:if="${!project.status.toString().equals('ongoing')}"
+           th:href="'/project/status/' + ${project.projectNo} + '?status=ongoing'">Ongoing</a>
+    </li>
+    <li>
+        <a th:if="${!project.status.toString().equals('rest')}"
+           th:href="'/project/status/' + ${project.projectNo} + '?status=rest'">Rest</a>
+
+    </li>
+    <li>
+        <a th:if="${!project.status.toString().equals('end')}"
+           th:href="'/project/status/' + ${project.projectNo} + '?status=end'">End</a>
+    </li>
+</ul>
+
+<table>
+    <thead>
+    <th>Project Name</th>
+    <th>Project status</th>
+    <th>Project Admin</th>
+    </thead>
+    <td th:text="${project.title}"></td>
+    <td th:text="${project.status}"></td>
+    <td th:text="${project.admin}"></td>
+</table>
+<br><br>
+<details>
+    <summary>Project Members</summary>
+    <table>
+        <th>member Id</th>
+        <th>delete</th>
+        <tr th:each="pMembers : ${projectMembers}">
+            <td th:text="${pMembers.id}"></td>
+            <td>
+                <a th:href="'/project/members/delete/'+ ${project.projectNo} + '?memberNo=' + ${pMembers.memberNo}">Delete
+                    Project
+                    member</a>
+            </td>
+        </tr>
+    </table>
+</details>
+<details>
+    <summary>Choose Project Member</summary>
+    <table>
+        <th>member Id</th>
+        <th>Choose</th>
+        <tr th:each="member : ${members}">
+            <td th:text="${member.id}"></td>
+            <td>
+                <form method="post"
+                      th:action="'/project/register/member/'+${project.projectNo} + '?memberNo='+${member.memberNo}">
+                    <button type="submit">Add Member</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</details>
+<details>
+    <summary>Add Task</summary>
+    <form method="post" th:action="'/task/register/'+${project.projectNo}">
+        <strong>Task Title</strong>
+        <br><input type="text" name="title"><br>
+        <strong>Task Content</strong><br>
+        <label>
+        <textarea cols="10" rows="10" name="content">
+</textarea>
+        </label>
+        <br>
+        <button type="submit">Register Task</button>
+    </form>
+</details>
+<details>
+    <summary>Task List</summary>
+    <th>Task Title</th>
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.title}"></td>
+    </tr>
+</details>
+<a href="/">Home</a>
+</body>
+</html>

@@ -1,24 +1,20 @@
 package com.nhnacademy.account.service;
 
-import com.nhnacademy.account.dto.UserDto;
-import com.nhnacademy.account.vo.UserRequestVo;
-import com.nhnacademy.account.vo.UserResponseVo;
-import com.nhnacademy.account.vo.UserStatusVo;
+import com.nhnacademy.account.data.response.UserIdResponse;
+import com.nhnacademy.account.data.response.UserResponse;
+import com.nhnacademy.account.data.response.UserLoginResponse;
 
 import java.util.List;
 
 public interface UserService {
-    List<UserDto> getUsers();
 
-    UserDto getUser(String  userId);
+    List<UserIdResponse> getUserList();
 
-    UserResponseVo replaceUser(String userId,UserRequestVo userRequestVo);
+    void userRegister(UserResponse response);
 
-    UserResponseVo replaceUser(UserStatusVo userStatusVo);
+    UserLoginResponse findUserById(String id);
 
-    UserDto checkUserIdAndPwd(String userId, String userPwd);
+    void userStateModify(String id, String state);
 
-    UserResponseVo createUser(UserRequestVo userRequestVo);
-    UserResponseVo findEmail(String userEmail);
-    void removeUser(String userId);
+    UserLoginResponse findUserByEmail(String email);
 }

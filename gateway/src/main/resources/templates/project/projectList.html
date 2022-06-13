@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project List</title>
+    <style>
+        table,th,td{
+            border: 1px solid;
+        }
+    </style>
+</head>
+<body>
+<h1>Project List</h1>
+<div>
+    <table>
+        <tr>
+            <th>Number</th>
+            <th>Title</th>
+            <th>Admin</th>
+            <th>Status</th>
+        </tr>
+        <tr th:each="project : ${projects}">
+            <td th:text="${project.projectNo}"></td>
+            <td>
+                <a th:if="not ${project.title.toString().equals('empty')}" th:href="'/project/info?projectNo=' + ${project.projectNo}" th:text="${project.title}"></a>
+                <span th:unless="not ${project.title.toString().equals('empty')}" th:text="${project.title}"></span>
+            </td>
+            <td th:text="${project.admin}"></td>
+            <td th:text="${project.status}"></td>
+        </tr>
+    </table>
+</div>
+<br />
+    <a th:href="'/project/register'">프로젝트 생성</a>
+<br>
+    <strong><a href="/">home</a></strong>
+</body>
+</html>

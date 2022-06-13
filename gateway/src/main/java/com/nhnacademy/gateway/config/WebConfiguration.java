@@ -10,19 +10,24 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 
 import java.time.Duration;
 
-
-@Configuration
 @EnableSpringDataWebSupport
+@Configuration
 public class WebConfiguration extends WebMvcConfigurationSupport {
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder){
-        return builder
-                .setConnectTimeout(Duration.ofSeconds(20))
-                .setReadTimeout(Duration.ofSeconds(20))
-                .build();
-    }
+
     @Override
     protected void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index");
+
+        registry.addViewController("/auth/login").setViewName("login");
+        registry.addViewController("/auth/logout").setViewName("logout");
+        registry.addViewController("/error/403").setViewName("error403");
+    }
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+
+        return builder
+                .setReadTimeout(Duration.ofSeconds(5L))
+                .setConnectTimeout(Duration.ofSeconds(3L))
+                .build();
     }
 }

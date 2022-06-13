@@ -12,4 +12,7 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "task_no")
     private Task task;
+
+    @Column(name = "comment_content")
+    private String content;
 }

@@ -93,8 +93,9 @@ class UserRepositoryTest {
     @Test
     void findEmailTest(){
         repository.save(user);
-        User user1 = repository.findByEmail(user.getEmail()).orElseThrow(NoUserException::new);
 
-        assertThat(user1).isEqualTo(user);
+        boolean b = repository.existsByEmail(user.getEmail());
+
+        assertThat(b).isTrue();
     }
 }

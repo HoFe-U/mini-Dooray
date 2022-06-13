@@ -2,17 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Main page</title>
 </head>
 <body>
 <h1>Main Page</h1>
-<strong>
-    <a href="/login">로그인 페이지로</a>
-</strong>
 <br>
-<br>
-<strong>
-    <a href="/membership">회원가입</a>
-</strong>
+<a href="/user/join">Sign Up</a>
+<br/>
+<a th:href="'/project/view?member=' + ${user.id} ">Projects</a>
+<br/>
+<div th:if="${user.state == 'guest'}">
+    <a href="/auth/login" th:text="Login"></a>
+</div>
+<br/>
+<br/>
+<div th:if="${user.state != 'guest'}">
+    <a href="/auth/logout" th:text="Logout"></a>
+</div>
 </body>
 </html>

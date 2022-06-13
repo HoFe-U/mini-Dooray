@@ -1,0 +1,310 @@
+account
+
+###
+status 가입 인 유저 List 뽑기
+###
+GET http://localhost:8090/user HTTP/1.1
+
+HTTP/1.1 200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Mon, 13 Jun 2022 21:37:10 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+[
+  {
+    "id": "admin"
+  },
+  {
+    "id": "user"
+  },
+  {
+    "id": "b"
+  },
+  {
+    "id": "a"
+  }
+]
+Response file saved.
+> 2022-06-14T063710.200.json
+###
+user 정보 들고오기
+###
+Response code: 200; Time: 325ms; Content length: 52 bytes
+###
+GET http://localhost:8090/user/get/user
+
+HTTP/1.1 200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Mon, 13 Jun 2022 21:44:44 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+{
+  "id": "user",
+  "pw": "$2a$10$.kA9QKXWfS3zS5M91pzsjOjrzrqjbYktbaGXMW5kzd9fx3NAtYdPa",
+  "email": "user@email.com",
+  "state": "가입"
+}
+Response file saved.
+> 2022-06-14T064444.200.json
+
+Response code: 200; Time: 122ms; Content length: 119 bytes
+
+###
+이메일 비교해서 user 값 들고오기
+###
+GET http://localhost:8090/user/check/email?email=user@email.com
+
+HTTP/1.1 200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Mon, 13 Jun 2022 21:49:10 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+{
+  "id": "user",
+  "pw": "$2a$10$.kA9QKXWfS3zS5M91pzsjOjrzrqjbYktbaGXMW5kzd9fx3NAtYdPa",
+  "email": "user@email.com",
+  "state": "가입"
+}
+Response file saved.
+> 2022-06-14T064910.200.json
+
+Response code: 200; Time: 1086ms; Content length: 119 bytes
+###
+user 등록
+###
+
+http://localhost:8090/user/register
+
+HTTP/1.1 201
+Content-Length: 0
+Date: Mon, 13 Jun 2022 21:53:08 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+<Response body is empty>
+
+
+
+Response code: 201; Time: 362ms; Content length: 0 bytes
+
+###
+user state 수정
+###
+http://localhost:8090/user/modify/user/탈퇴
+
+HTTP/1.1 200
+Content-Length: 0
+Date: Mon, 13 Jun 2022 21:55:13 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+<Response body is empty>
+
+
+
+Response code: 200; Time: 260ms; Content length: 0 bytes
+
+###
+project 에 등록되지않은 member 호출
+###
+
+http://localhost:9090/members/get/notIn?projectNo=1
+
+HTTP/1.1 200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Mon, 13 Jun 2022 21:57:30 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+[
+  {
+    "memberNo": 5,
+    "id": "a"
+  },
+  {
+    "memberNo": 2,
+    "id": "admin"
+  },
+  {
+    "memberNo": 3,
+    "id": "null"
+  }
+]
+Response file saved.
+> 2022-06-14T065730.200.json
+
+Response code: 200; Time: 141ms; Content length: 80 bytes
+
+###
+project 에 등록되어있는 member 호출
+###
+http://localhost:9090/members/get/in?projectNo=1
+
+HTTP/1.1 200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Mon, 13 Jun 2022 21:58:35 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+[
+  {
+    "memberNo": 4,
+    "id": "asdf"
+  }
+]
+Response file saved.
+> 2022-06-14T065835.200.json
+
+Response code: 200; Time: 80ms; Content length: 28 bytes
+###
+member 추가
+###
+http://localhost:9090/members/register?id=awawa
+
+HTTP/1.1 200
+Content-Length: 0
+Date: Mon, 13 Jun 2022 22:00:17 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+<Response body is empty>
+
+
+
+Response code: 200; Time: 209ms; Content length: 0 bytes
+###
+member를 통해 project 호출
+###
+http://localhost:9090/project/view/admin
+
+HTTP/1.1 200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Mon, 13 Jun 2022 22:01:22 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+[
+  {
+    "projectNo": 1,
+    "admin": "admin",
+    "status": "ongoing",
+    "title": "test1"
+  },
+  {
+    "projectNo": 2,
+    "admin": "admin",
+    "status": "ongoing",
+    "title": "test2"
+  }
+]
+Response file saved.
+> 2022-06-14T070122.200.json
+
+Response code: 200; Time: 222ms; Content length: 135 bytes
+
+###
+프로젝트 추가
+###
+POST http://localhost:9090/project/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "id": "admin",
+  "title": "어렵네",
+  "content": "ㅜㅜㅜㅜㅜㅜ"
+}
+
+HTTP/1.1 200
+Content-Length: 0
+Date: Mon, 13 Jun 2022 22:03:04 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+<Response body is empty>
+
+
+
+Response code: 200; Time: 220ms; Content length: 0 bytes
+
+###
+project 번호를 통해서 프로젝트 받기
+###
+http://localhost:9090/project/get?projectNo=1
+
+HTTP/1.1 200
+Content-Type: application/json
+Transfer-Encoding: chunked
+Date: Mon, 13 Jun 2022 22:04:16 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+{
+  "projectNo": 1,
+  "title": "test1",
+  "status": "ongoing",
+  "admin": "admin"
+}
+Response file saved.
+> 2022-06-14T070416.200.json
+
+Response code: 200; Time: 260ms; Content length: 66 bytes
+
+###
+project 상태변경
+###
+http://localhost:9090/project/status/1?status=end
+
+HTTP/1.1 200
+Content-Length: 0
+Date: Mon, 13 Jun 2022 22:05:37 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+<Response body is empty>
+
+
+
+Response code: 200; Time: 246ms; Content length: 0 bytes
+
+###
+project 에 참여하는 멤버 추가
+###
+http://localhost:9090/project/register/member
+
+HTTP/1.1 200
+Content-Length: 0
+Date: Mon, 13 Jun 2022 22:06:50 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+<Response body is empty>
+
+
+
+Response code: 200; Time: 237ms; Content length: 0 bytes
+###
+project 에 있는 멤버 제거
+###
+
+http://localhost:9090/project/delete/member/1?memberNo=1
+
+HTTP/1.1 200
+Content-Length: 0
+Date: Mon, 13 Jun 2022 22:07:29 GMT
+Keep-Alive: timeout=60
+Connection: keep-alive
+
+<Response body is empty>
+
+
+
+Response code: 200; Time: 295ms; Content length: 0 bytes

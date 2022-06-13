@@ -11,13 +11,11 @@ import com.nhnacademy.account.vo.UserStatusVo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -153,8 +151,8 @@ class UserServiceTest {
     void findUserByEmailTest(){
         userRepository.save(user1);
 
-        UserResponseVo email = userService.findEmail(user1.getEmail());
+        boolean email = userService.checkEmail(user1.getEmail());
 
-        assertThat(email.getEmail()).isEqualTo(user1.getEmail());
+        assertThat(email).isTrue();
     }
 }

@@ -1,96 +1,70 @@
 package com.nhnacademy.account.service.impl;
 
-import com.nhnacademy.account.dto.UserDto;
+import com.nhnacademy.account.data.response.UserIdResponse;
+import com.nhnacademy.account.data.response.UserResponse;
+import com.nhnacademy.account.data.response.UserLoginResponse;
 import com.nhnacademy.account.entity.User;
-import com.nhnacademy.account.exception.NoUserException;
-import com.nhnacademy.account.exception.UserIdOverlapException;
+import com.nhnacademy.account.exception.UserNotFoundException;
 import com.nhnacademy.account.repository.UserRepository;
 import com.nhnacademy.account.service.UserService;
-import com.nhnacademy.account.vo.UserRequestVo;
-import com.nhnacademy.account.vo.UserResponseVo;
-import com.nhnacademy.account.vo.UserStatusVo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepository repository;
+
+    private final UserRepository userRepository;
 
     @Override
-    public List<UserDto> getUsers() {
-        List<User> users = repository.findAll();
-        if(users.isEmpty()){
-            throw new NoUserException();
-        }
+    public List<UserIdResponse> getUserList() {
 
-        return users.stream()
-                .map(UserDto::new)
+        List<User> userList = userRepository.findByUserState("가입");
+
+        return userList.stream()
+                .map(UserIdResponse::new)
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public UserDto getUser(String userId) {
-        User user = repository.findByUserId(userId).orElseThrow(NoUserException::new);
-        return new UserDto(user);
-    }
-
-    @Override
     @Transactional
-    @Modifying
-    public UserResponseVo replaceUser(String userId, UserRequestVo userRequestVo) {
-        User user = repository.findByUserId(userId).orElseThrow(NoUserException::new);
-
-        user.setUserId(userRequestVo.getId());
-        user.setUserName(userRequestVo.getName());
-        user.setUserPwd(userRequestVo.getPwd());
-        user.setEmail(userRequestVo.getEmail());
-        user.setStatus(userRequestVo.getStatus());
-
-        repository.flush();
-
-        return new UserResponseVo(user);
-    }
-
     @Override
-    public UserResponseVo replaceUser(UserStatusVo userStatusVo) {
-        User user = repository.findByUserId(userStatusVo.getUserId()).orElseThrow(NoUserException::new);
+    public void userRegister(UserResponse response) {
 
-        user.setStatus(userStatusVo.getStatus());
-
-        repository.flush();
-
-        return new UserResponseVo(user);
-    }
-
-    @Override
-    public UserDto checkUserIdAndPwd(String userId, String userPwd) {
-        User user = repository.findByUserIdAndUserPwd(userId, userPwd).orElseThrow(NoUserException::new);
-        return new UserDto(user);
-    }
-
-    @Override
-    @Transactional
-    public UserResponseVo createUser(UserRequestVo userRequestVo) {
-        if(repository.existsByUserId(userRequestVo.getId())){
-            throw new UserIdOverlapException();
+        if (Objects.nonNull(userRepository.getUserByUserId(response.getId()))) {
+            return;
         }
-        User user = new User(userRequestVo);
-        repository.save(user);
-        return new UserResponseVo(user);
+
+        User user = new User(response.getId(), response.getPw(), response.getEmail(), "가입");
+        userRepository.save(user);
     }
+
     @Override
-    public UserResponseVo findEmail(String userEmail) {
-        User user = repository.findByEmail(userEmail).orElseThrow(NoUserException::new);
-        return new UserResponseVo(user);
+    public UserLoginResponse findUserById(String id) {
+        User user = userRepository.getUserByUserId(id).orElseThrow(UserNotFoundException::new);
+        return new UserLoginResponse(user);
     }
+
     @Override
-    public void removeUser(String userId) {
-        repository.deleteByUserId(userId);
+    public UserLoginResponse findUserByEmail(String email) {
+        User user = userRepository.findByUserEmail(email).orElseThrow(UserNotFoundException::new);
+        return new UserLoginResponse(user);
+    }
+
+    @Transactional
+    @Override
+    public void userStateModify(String id, String state) {
+        User user = userRepository.getUserByUserId(id).orElseThrow(UserNotFoundException::new);
+
+        if (state.equals("탈퇴")) {
+            userRepository.deleteById(user.getUserNo());
+        } else {
+            user.setUserState(state);
+            userRepository.save(user);
+        }
     }
 }
